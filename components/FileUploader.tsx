@@ -1,19 +1,70 @@
 "use client"
 
-import {useCallback} from "react"
+import {useCallback, useEffect} from "react"
+import useUpload from "@/hooks/useUpload"
 import { useDropzone } from "react-dropzone"
 import { RocketIcon,CircleArrowDown ,CheckCircleIcon,HammerIcon,SaveIcon } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 const FileUploader = () => {
 
-   const onDrop = useCallback((acceptedFiles: File[]) => {
-         // Do something with the files
+    // customhook
+    
+   const {progress , status, fileId, handleUpload} = useUpload(); 
+   const router = useRouter();
+
+
+   useEffect(()=>{
+      if(fileId){
+        router.push(`/dashboard/files/${fileId}`);
+      }    
+   },[fileId])
+
+   const onDrop = useCallback(async (acceptedFiles: File[]) => {
+         // Do something with the files 
+         const files = acceptedFiles[0];
+         if(files){
+            await handleUpload(files)
+         }
+         else{
+          // do nothing
+          // toast
+         }
          console.log(acceptedFiles);
+
    }, [])
-   const {getRootProps, getInputProps, isDragActive , isFocused} = useDropzone({onDrop})
+   const {getRootProps, getInputProps, isDragActive , isFocused} = 
+   useDropzone({
+      onDrop,
+      accept : {
+        "application/pdf" : [".pdf"],
+      },
+  });
+
+  const uploadInProgress = progress!= null && progress >= 0 && progress <= 100;
+
    
    return (
     <div className="flex flex-col gap-2 items-center">
+        {uploadInProgress &&
+          <div className="mt-10 flex flex-col justify-center items-center gap-5">
+            <div className={`radial-progress bg-indigo-200 text-white border-indigo-400 border-4 ${progress === 100 && "hidden"}`}
+              role="progressbar"
+              // style={{
+              //   // ts 
+              //   "--value" : progress,
+              //   "--size" : "12rem",
+              //   "--thickness" : "1.3rem",
+              // }}
+            >
+              {progress}
+            </div>
+            <span className="loading loading-dots loading-xs"></span>
+            {/* <p>{status}</p> */}
+          </div>
+
+        }
+
         <div {...getRootProps()}
             className={` p-10 border-2 border-indigo-400 text-indigo-400 border-dashed mt-10 w-[90%] h-96  rounded-lg flex items-center justify-center ${isFocused || isDragActive ? "bg-indigo-300": "bg-indigo-100"}`}
             >

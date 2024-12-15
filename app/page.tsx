@@ -74,7 +74,7 @@ export default function Home() {
       <div className="flex justify-center items-center mt-10">
         <dl className="mx-auto grid max-w-2xl grid-col-1 gap-x-6 gap-y-10 text-base leading-7 text-gray-600 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-col-3 lg:gap-x-8 lg:gap-y-16">
           {features.map((item)=>(
-            <div className="relative pl-9">
+            <div key={item.name} className="relative pl-9">
               <dt className="inline font-semibold text-gray-900">
                 <item.icon
                   aria-hidden="true"

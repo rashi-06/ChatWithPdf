@@ -3,9 +3,10 @@ import {auth} from "@clerk/nextjs/server"
 import { revalidatePath } from "next/cache";
 import { generateEmbeddingsInPineconeVectorStore } from "@/lib/langchain";
 
+
 export async function generateEmbeddings(docId : string){
     
-    auth().protect(); 
+    auth.protect(); 
     await generateEmbeddingsInPineconeVectorStore(docId);
     revalidatePath("/document");
 
@@ -13,3 +14,4 @@ export async function generateEmbeddings(docId : string){
 }
 
 export default generateEmbeddings
+

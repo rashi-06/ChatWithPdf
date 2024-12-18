@@ -1,6 +1,7 @@
 import React from 'react'
 import { adminDb } from '@/firebaseAdmin';
 import {auth} from "@clerk/nextjs/server"
+import Chat from "@/components/Chat"
 import PdfView from '@/components/PdfView';
 
 const ChatToFilePage = async({params : {id}}:{
@@ -9,7 +10,7 @@ const ChatToFilePage = async({params : {id}}:{
     };
 }) => {
 
-  auth().protect();
+  auth.protect();
   const {userId} = await auth();
   
   const ref = await adminDb
